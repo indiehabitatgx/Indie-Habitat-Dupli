@@ -7,7 +7,8 @@ import bcrypt from "bcryptjs";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../lib/generated/prisma/client";
 
-const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
+// Seeding is an admin task: use the direct connection when available (Neon), else DATABASE_URL (local Postgres).
+const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL }) });
 
 const BMS_VENUE = "https://in.bookmyshow.com/venue/the-habitat-mumbai/TFST";
 

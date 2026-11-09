@@ -7,12 +7,27 @@ import { ChatWidget } from "@/components/assistant/ChatWidget";
 import { MobileTabBar } from "@/components/layout/MobileTabBar";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { getSettings, hasPublishedArtists } from "@/lib/data";
+import { db } from "@/lib/db";
+import { LIVE_SETTING_KEYS, realtimeConfig, sealAnnouncement } from "@/lib/realtime";
+import { LiveAnnouncement } from "@/components/layout/LiveAnnouncement";
+import { DEFAULT_ANNOUNCEMENT } from "@/lib/site";
 import { localBusinessJsonLd, organizationJsonLd } from "@/lib/seo";
 
 export const revalidate = 300;
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const [settings, showArtists] = await Promise.all([getSettings(), hasPublishedArtists()]);
+  const rt = realtimeConfig();
+  const [settings, showArtists, live] = await Promise.all([
+    getSettings(),
+    hasPublishedArtists(),
+    // With Neon Realtime configured: read the initial rows and seal the same live query in parallel.
+    rt
+      ? Promise.all([
+          db.siteSetting.findMany({ where: { key: { in: [...LIVE_SETTING_KEYS] } }, select: { key: true, value: true } }),
+          sealAnnouncement(),
+        ]).catch(() => null)
+      : null,
+  ]);
   return (
     <>
       <a
@@ -21,7 +36,11 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       >
         Skip to content
       </a>
-      {settings.announcementEnabled && settings.announcement && <AnnouncementBar text={settings.announcement} />}
+      {rt && live?.[1] ? (
+        <LiveAnnouncement realtimeUrl={rt.url} sealedQuery={live[1]} initialData={live[0]} fallbackText={DEFAULT_ANNOUNCEMENT} />
+      ) : (
+        settings.announcementEnabled && settings.announcement && <AnnouncementBar text={settings.announcement} />
+      )}
       <Header showArtists={showArtists} />
       <main id="main" tabIndex={-1} className="outline-none">
         {children}

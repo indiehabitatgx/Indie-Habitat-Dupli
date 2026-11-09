@@ -17,14 +17,14 @@ function readDismissed() {
   }
 }
 
-export function AnnouncementBar({ text }: { text: string }) {
+export function AnnouncementBar({ text, live }: { text: string; live?: boolean }) {
   const dismissed = useSyncExternalStore(subscribe, readDismissed, () => null);
   const [hidden, setHidden] = useState(false);
 
   if (hidden || dismissed === text) return null;
 
   return (
-    <div className="relative z-[60] bg-amber text-amber-ink" role="region" aria-label="Announcement">
+    <div className="relative z-[60] bg-amber text-amber-ink" role="region" aria-label="Announcement" data-live={live ? "true" : undefined}>
       <div className="container-x flex min-h-9 items-center justify-center gap-3 py-1.5 pr-12 text-center text-[0.7rem] font-semibold leading-snug sm:text-[0.8rem] md:min-h-10 md:text-sm">
         <Info className="hidden size-4 shrink-0 sm:block" aria-hidden />
         <p>{text}</p>

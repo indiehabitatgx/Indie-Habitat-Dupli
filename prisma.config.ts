@@ -8,6 +8,8 @@ export default defineConfig({
     seed: "tsx prisma/seed.ts",
   },
   datasource: {
-    url: env("DATABASE_URL"),
+    // Migrations need a DIRECT (non-pooled) connection; Neon's pooler (PgBouncer, transaction mode)
+    // breaks Prisma Migrate. Falls back to DATABASE_URL for local Postgres, which has no pooler.
+    url: process.env.DATABASE_URL_UNPOOLED || env("DATABASE_URL"),
   },
 });

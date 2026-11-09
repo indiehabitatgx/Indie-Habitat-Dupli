@@ -1,0 +1,10 @@
+# Netlify build settings. Netlify's Next.js runtime is detected automatically.
+# Set these environment variables in Netlify → Site configuration → Environment variables:
+#   DATABASE_URL, DATABASE_URL_UNPOOLED, NEON_REALTIME_URL, NEON_REALTIME_SECRET,
+#   AUTH_SECRET, NEXT_PUBLIC_SITE_URL (and optionally ASSISTANT_MODE / ANTHROPIC_API_KEY)
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NEXT_TELEMETRY_DISABLED = "1"
