@@ -1,0 +1,211 @@
+// The Habitat — data model
+// Docs: /docs/database-schema.md
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Recurrence {
+  ONE_OFF
+  WEEKLY
+}
+
+enum EnquiryStatus {
+  NEW
+  IN_PROGRESS
+  RESOLVED
+  SPAM
+}
+
+enum AdminRole {
+  ADMIN
+  EDITOR
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+model EventCategory {
+  id        String  @id @default(cuid())
+  name      String  @unique
+  slug      String  @unique
+  sortOrder Int     @default(0)
+  events    Event[]
+}
+
+model Venue {
+  id        String  @id @default(cuid())
+  name      String
+  slug      String  @unique
+  summary   String
+  capacity  String? // free text, e.g. "55 seated / 75 without tables" — verified figures only
+  image     String?
+  sortOrder Int     @default(0)
+  events    Event[]
+}
+
+model Event {
+  id               String         @id @default(cuid())
+  title            String
+  slug             String         @unique
+  shortDescription String
+  description      String
+  bannerImage      String?
+  thumbnailImage   String?
+  posterWidth      Int?
+  posterHeight     Int?
+  categoryId       String
+  category         EventCategory  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  venueId          String?
+  venue            Venue?         @relation(fields: [venueId], references: [id], onDelete: SetNull)
+  recurrence       Recurrence     @default(WEEKLY)
+  /// Weekly shows: days of week the show runs, 0 = Sunday … 6 = Saturday
+  scheduleDays     Int[]
+  /// Human‑readable schedule exactly as published, e.g. "Fri 6:00 PM · Sat & Sun 4:00 PM"
+  scheduleText     String
+  /// One‑off events only
+  startDate        DateTime?
+  endDate          DateTime?
+  /// Earliest start time, "HH:mm" 24h — used for sorting
+  startTime        String?
+  /// Lowest ticket price in INR; null = not published
+  ticketPrice      Int?
+  /// Price detail as published, e.g. "Mon–Fri ₹300 · Sat–Sun ₹500"
+  priceNote        String?
+  bookingUrl       String?
+  bookingProvider  String?
+  terms            String?
+  status           PublishStatus  @default(DRAFT)
+  featured         Boolean        @default(false)
+  sortOrder        Int            @default(0)
+  seoTitle         String?
+  seoDescription   String?
+  artists          Artist[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([status, featured])
+  @@index([categoryId])
+  @@index([venueId])
+  @@index([startDate])
+}
+
+model Artist {
+  id           String        @id @default(cuid())
+  name         String
+  slug         String        @unique
+  biography    String
+  profileImage String?
+  /// { instagram?: string, youtube?: string, x?: string, website?: string }
+  socialLinks  Json          @default("{}")
+  featured     Boolean       @default(false)
+  status       PublishStatus @default(DRAFT)
+  events       Event[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([status, featured])
+}
+
+model GalleryImage {
+  id        String    @id @default(cuid())
+  title     String
+  alt       String
+  src       String
+  width     Int
+  height    Int
+  category  String
+  mediaType MediaType @default(IMAGE)
+  /// YouTube video id when mediaType = VIDEO (src is the poster image)
+  videoId   String?
+  sortOrder Int       @default(0)
+  published Boolean   @default(true)
+  createdAt DateTime  @default(now())
+
+  @@index([published, category])
+}
+
+model MediaAsset {
+  id         String   @id @default(cuid())
+  filename   String
+  path       String   @unique
+  mimeType   String
+  size       Int
+  width      Int?
+  height     Int?
+  alt        String?
+  uploadedBy String?
+  createdAt  DateTime @default(now())
+}
+
+/// General contact + venue booking requests (source = "contact" | "venue:<slug>")
+model ContactEnquiry {
+  id        String        @id @default(cuid())
+  source    String        @default("contact")
+  name      String
+  email     String
+  phone     String?
+  purpose   String
+  guests    String?
+  message   String?
+  status    EnquiryStatus @default(NEW)
+  createdAt DateTime      @default(now())
+
+  @@index([status, createdAt])
+}
+
+model CorporateEnquiry {
+  id            String        @id @default(cuid())
+  name          String
+  company       String?
+  email         String
+  phone         String
+  eventType     String
+  preferredDate DateTime?
+  attendees     String
+  duration      String?
+  foodBeverage  String?
+  technical     String[]
+  message       String?
+  status        EnquiryStatus @default(NEW)
+  createdAt     DateTime      @default(now())
+
+  @@index([status, createdAt])
+}
+
+model NewsletterSubscriber {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  confirmed      Boolean   @default(false)
+  unsubscribedAt DateTime?
+  createdAt      DateTime  @default(now())
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         AdminRole @default(EDITOR)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+}
+
+model SiteSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
