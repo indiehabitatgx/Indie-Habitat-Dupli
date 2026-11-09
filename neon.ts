@@ -8,7 +8,7 @@ export default defineConfig({
     // Realtime powers live updates on the site (e.g. the announcement bar and event changes push instantly).
     // Browsers may only connect from these origins. Add the production domain when it's live.
     realtime: {
-      allowedOrigins: ["http://localhost:3210", "https://indiehabitat.com"],
+      allowedOrigins: ["http://localhost:3210", "https://indiehabitat.com", "https://indiehabitat.vercel.app"],
     },
   },
   // Branch policy: per-branch tuning
