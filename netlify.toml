@@ -8,3 +8,8 @@
 [build.environment]
   NODE_VERSION = "22"
   NEXT_TELEMETRY_DISABLED = "1"
+  # These two values are PUBLIC by design and appear in every rendered page:
+  # the site's own URL (canonical / Open Graph tags) and the Neon Realtime WebSocket
+  # endpoint the browser connects to. Real secrets (DATABASE_URL*, AUTH_SECRET,
+  # NEON_REALTIME_SECRET) stay fully covered by Netlify's secrets scanning.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SITE_URL,NEON_REALTIME_URL"
