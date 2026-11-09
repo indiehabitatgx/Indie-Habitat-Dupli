@@ -9,7 +9,6 @@ export function pageMetadata({
   title,
   description,
   path,
-  image = DEFAULT_OG,
   noindex = false,
 }: {
   title: string;
@@ -30,14 +29,12 @@ export function pageMetadata({
       description,
       siteName: site.name,
       locale: "en_IN",
-      images: [{ url: absoluteUrl(image), alt: `${site.name}, Mumbai` }],
     },
     twitter: {
       card: "summary_large_image",
       site: "@IndieHabitat",
       title: `${title} | ${site.name}`,
       description,
-      images: [absoluteUrl(image)],
     },
     robots: noindex ? { index: false, follow: false } : undefined,
   };

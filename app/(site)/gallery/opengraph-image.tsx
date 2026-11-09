@@ -1,0 +1,14 @@
+import { OG_SIZE, OG_TYPE, ogCard } from "@/lib/og";
+
+export const alt = "Gallery — The Habitat";
+export const size = OG_SIZE;
+export const contentType = OG_TYPE;
+
+export default function Image() {
+  return ogCard({
+    eyebrow: "#momentsathabitat",
+    title: "The gallery",
+    subtitle: "Stages, crowds, celebrations and the jam room.",
+    photo: "/images/venue/the-habitat-stage.webp",
+  });
+}

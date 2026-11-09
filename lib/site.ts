@@ -1,3 +1,5 @@
+import { siteOrigin } from "@/lib/utils";
+
 /**
  * Verified business facts. Every value here was published on indiehabitat.com
  * (audited 9 Nov 2026 — see /research/website-audit.md). Do not add unverified claims.
@@ -8,7 +10,7 @@ export const site = {
   tagline: "Comedy and Music Cafe",
   description:
     "The Habitat is a comedy and music cafe in Mumbai — an intimate home for stand-up comedy, music, poetry and alternate events, with a larger hall upstairs, a jam room and space for private events.",
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, ""),
+  url: siteOrigin(),
   phone: "+91 98333 58492",
   phoneHref: "tel:+919833358492",
   feedbackPhone: "+91 98333 58490",

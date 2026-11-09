@@ -20,6 +20,17 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "**.fbcdn.net" },
     ],
   },
+  // Link-preview images (app/**/opengraph-image.tsx) read these at runtime on serverless hosts.
+  outputFileTracingIncludes: {
+    "/**": [
+      "./assets/og/**/*",
+      "./public/images/hero/*.webp",
+      "./public/images/brand/*.png",
+      "./public/images/events/*.webp",
+      "./public/images/venue/*.webp",
+      "./public/images/gallery/*.webp",
+    ],
+  },
   experimental: {
     serverActions: { bodySizeLimit: "8mb" },
   },

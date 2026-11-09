@@ -75,7 +75,7 @@ export function EventExplorer({ events, initial }: { events: EventCardData[]; in
         </EmptyState>
       ) : (
         <>
-          <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 xl:grid-cols-3">
+          <ul className="grid grid-cols-2 gap-x-3 gap-y-6 sm:gap-x-6 sm:gap-y-10 xl:grid-cols-3">
             {results.slice(0, visible).map((e, i) => (
               <li key={e.id} className="animate-fade-up" style={{ animationDelay: `${Math.min(i, 8) * 50}ms` }}>
                 <EventCard event={e} />

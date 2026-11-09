@@ -27,7 +27,7 @@ export function EventCard({
             alt={`${event.title} poster`}
             fill
             priority={priority}
-            sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 92vw"
+            sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, (min-width: 640px) 50vw, 66vw"
             className="object-cover transition duration-[1.2s] ease-out-expo group-hover:scale-[1.06] group-focus-within:scale-[1.06]"
           />
         ) : (
@@ -37,42 +37,46 @@ export function EventCard({
           className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-within:opacity-100"
           aria-hidden
         />
-        <div className="absolute left-3 top-3 flex gap-2">
-          <Badge tone="amber">{event.category.name}</Badge>
-          {event.recurrence === "WEEKLY" && <Badge tone="muted" className="bg-black/60 backdrop-blur">Weekly</Badge>}
+        <div className="absolute left-2 top-2 flex gap-1.5 sm:left-3 sm:top-3 sm:gap-2">
+          <Badge tone="amber" className="px-1.5 py-0.5 text-[0.55rem] sm:px-2 sm:py-1 sm:text-[0.65rem]">{event.category.name}</Badge>
+          {event.recurrence === "WEEKLY" && (
+            <Badge tone="muted" className="hidden bg-black/60 backdrop-blur sm:inline-flex">
+              Weekly
+            </Badge>
+          )}
         </div>
         {typeof index === "number" && (
-          <span className="absolute right-3 top-2 font-display text-sm font-black text-white/80 drop-shadow" aria-hidden>
+          <span className="absolute right-2 top-1.5 font-display text-xs font-black text-white/80 drop-shadow sm:right-3 sm:top-2 sm:text-sm" aria-hidden>
             {String(index + 1).padStart(2, "0")}
           </span>
         )}
-        <p className="absolute inset-x-0 bottom-0 translate-y-4 p-5 text-[0.95rem] leading-snug text-white opacity-0 transition duration-500 ease-out-expo group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
+        <p className="absolute inset-x-0 bottom-0 hidden translate-y-4 p-5 text-[0.95rem] sm:block leading-snug text-white opacity-0 transition duration-500 ease-out-expo group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
           {event.shortDescription}
         </p>
       </div>
-      <div className="flex flex-1 flex-col gap-3 border-x border-b border-line p-5">
-        <h3 className="font-display text-xl font-extrabold uppercase leading-tight">
+      <div className="flex flex-1 flex-col gap-2 border-x border-b border-line p-3 sm:gap-3 sm:p-5">
+        <h3 className="line-clamp-2 font-display text-[0.85rem] font-extrabold uppercase leading-tight sm:text-xl">
           <Link href={`/events/${event.slug}`} className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none">
             {event.title}
           </Link>
         </h3>
-        <dl className="mt-auto grid gap-1.5 text-sm text-muted">
-          <div className="flex items-center gap-2">
+        <dl className="mt-auto grid gap-1.5 text-xs text-muted sm:text-sm">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <dt className="sr-only">Days</dt>
-            <CalendarDays className="size-4 text-amber" aria-hidden />
-            <dd>{when}</dd>
+            <CalendarDays className="size-3.5 shrink-0 text-amber sm:size-4" aria-hidden />
+            <dd className="truncate">{when}</dd>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="hidden items-center gap-2 sm:flex">
             <dt className="sr-only">Schedule</dt>
             <Clock className="size-4 text-amber" aria-hidden />
             <dd>{event.scheduleText}</dd>
           </div>
         </dl>
-        <div className="flex items-center justify-between border-t border-line pt-3">
-          <span className="font-display text-sm font-bold">
+        <div className="flex items-center justify-between border-t border-line pt-2 sm:pt-3">
+          <span className="font-display text-xs font-bold sm:text-sm">
             {price ? (
               <>
-                <span className="text-muted">from </span>
+                <span className="hidden text-muted sm:inline">from </span>
                 {price}
               </>
             ) : (
@@ -80,7 +84,7 @@ export function EventCard({
             )}
           </span>
           <span className="font-display text-[0.7rem] font-bold uppercase tracking-[0.16em] text-amber transition-transform duration-500 group-hover:translate-x-1">
-            Details →
+            <span className="hidden sm:inline">Details </span>→
           </span>
         </div>
       </div>

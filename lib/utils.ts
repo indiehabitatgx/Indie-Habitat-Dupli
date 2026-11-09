@@ -54,8 +54,20 @@ export function formatDate(d: Date | string | null | undefined) {
   }).format(new Date(d));
 }
 
+/**
+ * Public origin of the site. Uses NEXT_PUBLIC_SITE_URL, unless it's unset or still a placeholder, then the
+ * host's own production URL (Vercel: VERCEL_PROJECT_PRODUCTION_URL, Netlify: URL), then localhost.
+ */
+export function siteOrigin() {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (configured && !/your-site/i.test(configured)) return configured.replace(/\/$/, "");
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  if (process.env.URL) return process.env.URL.replace(/\/$/, "");
+  return "http://localhost:3000";
+}
+
 export function absoluteUrl(path = "/") {
-  const base = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+  const base = siteOrigin();
   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
