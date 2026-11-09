@@ -38,7 +38,7 @@ export default async function HomePage() {
         <Marquee items={marquee} />
       </div>
       <IntroSection />
-      <FeaturedEvents events={featured} />
+      <FeaturedEvents events={all.length ? all : featured} />
       <ExperiencesSection />
       <ComedySection />
       <MusicPoetrySection />

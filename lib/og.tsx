@@ -10,7 +10,10 @@ import { site } from "@/lib/site";
  * 1200×630, The Habitat's black + amber identity, official logo, B&W stage photography.
  */
 export const OG_SIZE = { width: 1200, height: 630 };
-export const OG_TYPE = "image/png";
+// JPEG keeps cards well under WhatsApp's ~300 KB preview limit (PNG photos were ~250–500 KB).
+export const OG_TYPE = "image/jpeg";
+/** Cards change only when content changes; let CDNs and crawlers cache them. */
+export const OG_REVALIDATE = 3600;
 
 const AMBER = "#fcb232";
 const INK = "#0a0a0a";
@@ -71,7 +74,7 @@ export async function ogCard({ eyebrow, title, subtitle, photo = "/images/hero/s
   ]);
   const titleSize = title.length > 34 ? 60 : title.length > 22 ? 72 : 86;
 
-  return new ImageResponse(
+  const png = new ImageResponse(
     (
       <div style={{ width: "100%", height: "100%", display: "flex", position: "relative", background: INK, fontFamily: "Raleway" }}>
         {bg && (
@@ -153,4 +156,13 @@ export async function ogCard({ eyebrow, title, subtitle, photo = "/images/hero/s
     ),
     { ...OG_SIZE, fonts: fontData },
   );
+  const jpeg = await sharp(Buffer.from(await png.arrayBuffer()))
+    .jpeg({ quality: 84, mozjpeg: true, chromaSubsampling: "4:4:4" })
+    .toBuffer();
+  return new Response(new Uint8Array(jpeg), {
+    headers: {
+      "Content-Type": OG_TYPE,
+      "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800",
+    },
+  });
 }

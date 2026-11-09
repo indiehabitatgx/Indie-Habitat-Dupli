@@ -1,10 +1,19 @@
 import { OG_SIZE, OG_TYPE, ogCard } from "@/lib/og";
-import { getEventBySlug } from "@/lib/data";
+import { getEventBySlug, getPublishedEventSlugs } from "@/lib/data";
 import { formatPrice } from "@/lib/utils";
 
 export const alt = "Show at The Habitat, Mumbai";
 export const size = OG_SIZE;
 export const contentType = OG_TYPE;
+export const revalidate = 3600; // keep in step with OG_REVALIDATE
+
+export async function generateStaticParams() {
+  try {
+    return (await getPublishedEventSlugs()).map((e) => ({ slug: e.slug }));
+  } catch {
+    return [];
+  }
+}
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const event = await getEventBySlug((await params).slug);
