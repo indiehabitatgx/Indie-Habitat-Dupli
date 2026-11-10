@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Mic } from "lucide-react";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/Reveal";
@@ -33,10 +34,52 @@ export function CommunitySection() {
     <section className="relative overflow-hidden py-20 md:py-28" aria-labelledby="community-heading">
       <div className="slats absolute inset-x-0 top-0" aria-hidden />
       <div className="container-x grid gap-14 lg:grid-cols-12">
-        <Reveal className="lg:col-span-5">
+        <Reveal className="lg:sticky lg:top-[calc(var(--header-h)+2.5rem)] lg:col-span-5 lg:self-start">
           <p className="eyebrow mb-4">#community</p>
           <TextReveal id="community-heading" className="display-lg" text="Your turn on the mic." accent={["mic"]} />
-          <Mic className="mt-10 size-16 stroke-[1] text-amber" aria-hidden />
+
+          {/* Stage + crowd photo stack with a spinning "your set here" sticker */}
+          <div className="relative mt-10 mr-6 max-w-[26rem] sm:mr-10">
+            <div className="relative aspect-[4/3] overflow-hidden border border-line sm:aspect-[5/4]">
+              <Image
+                src="/images/hero/stage-bw-hd.webp"
+                alt="The empty stage at The Habitat, mic on the stand"
+                fill
+                sizes="(min-width: 1024px) 416px, 90vw"
+                className="object-cover grayscale"
+              />
+              <div className="absolute inset-0 bg-[radial-gradient(60%_55%_at_50%_30%,rgba(252,178,50,0.28),transparent_70%)] mix-blend-screen" aria-hidden />
+              <div className="absolute inset-0 bg-gradient-to-t from-bg/90 via-transparent to-transparent" aria-hidden />
+              <p className="absolute bottom-4 left-4 font-display text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white/80">
+                The stage · Khar West
+              </p>
+            </div>
+            <div className="absolute -bottom-8 -right-6 w-[46%] rotate-3 border-4 border-bg shadow-[0_20px_50px_rgba(0,0,0,0.6)] sm:-right-10">
+              <div className="relative aspect-[4/3]">
+                <Image src="/images/gallery/audience.webp" alt="A packed Habitat crowd" fill sizes="200px" className="object-cover" />
+              </div>
+            </div>
+            <div className="absolute -left-4 -top-6 grid size-24 place-items-center sm:-left-6" aria-hidden>
+              <svg viewBox="0 0 100 100" className="absolute inset-0 size-full animate-[spin_18s_linear_infinite] motion-reduce:animate-none">
+                <defs>
+                  <path id="community-ring" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
+                </defs>
+                <circle cx="50" cy="50" r="49" className="fill-amber" />
+                <text className="fill-amber-ink font-display text-[10px] font-black uppercase">
+                  <textPath href="#community-ring" textLength="236" lengthAdjust="spacingAndGlyphs">Your set here · Your set here · </textPath>
+                </text>
+              </svg>
+              <Mic className="relative size-7 text-amber-ink" />
+            </div>
+          </div>
+
+          <ul className="mt-16 flex flex-wrap gap-2" aria-label="Who takes the stage">
+            {["Comedy", "Poetry", "Music", "Storytelling", "Podcasts"].map((t) => (
+              <li key={t} className="rounded-full border border-line px-3 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.16em] text-muted">
+                {t}
+              </li>
+            ))}
+          </ul>
         </Reveal>
         <Stagger as="ol" className="grid gap-px bg-line lg:col-span-7">
           {ways.map((w, i) => (
