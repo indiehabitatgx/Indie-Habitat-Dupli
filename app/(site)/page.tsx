@@ -28,7 +28,7 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const [featured, all, artists, insta] = await Promise.all([getFeaturedEvents(6), getEvents(), getArtists(), getInstagramFeed(8)]);
+  const [featured, all, artists, insta] = await Promise.all([getFeaturedEvents(10), getEvents(), getArtists(), getInstagramFeed(8)]);
   const marquee = all.length ? all.map((e) => e.title) : ["Stand-up comedy", "Live music", "Poetry", "Open mics"];
 
   return (
@@ -38,7 +38,7 @@ export default async function HomePage() {
         <Marquee items={marquee} />
       </div>
       <IntroSection />
-      <FeaturedEvents events={all.length ? all : featured} />
+      <FeaturedEvents events={featured.length ? featured : all} />
       <ExperiencesSection />
       <ComedySection />
       <MusicPoetrySection />

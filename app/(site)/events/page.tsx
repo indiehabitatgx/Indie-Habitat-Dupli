@@ -8,7 +8,7 @@ import { site } from "@/lib/site";
 export const metadata = pageMetadata({
   title: "Events — Stand-up Comedy, Open Mics & Poetry",
   description:
-    "Weekly stand-up comedy, midnight shows, Comedy Roulette, Mass Bunk, and comedy & poetry open mics at The Habitat, Khar West, Mumbai. Book on BookMyShow.",
+    "All Star Standup Comedy, Midnight All Stars, stand-up specials, poetry and storytelling at The Habitat, Khar West, Mumbai. Book on BookMyShow.",
   path: "/events",
 });
 

@@ -27,6 +27,7 @@ const nextConfig: NextConfig = {
       "./public/images/hero/*.webp",
       "./public/images/brand/*.png",
       "./public/images/events/*.webp",
+      "./public/images/events/bms/*.webp",
       "./public/images/venue/*.webp",
       "./public/images/gallery/*.webp",
     ],

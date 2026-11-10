@@ -9,7 +9,7 @@ export default function Image() {
   return ogCard({
     eyebrow: "#gigs · What's on",
     title: "This week at The Habitat",
-    subtitle: "Stand-up comedy, midnight shows, Comedy Roulette, Mass Bunk and open mics. Tickets on BookMyShow.",
+    subtitle: "All Star Standup, Midnight All Stars, solo specials, poetry and storytelling. Tickets on BookMyShow.",
     photo: "/images/gallery/audience.webp",
   });
 }
