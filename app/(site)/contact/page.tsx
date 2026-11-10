@@ -3,8 +3,9 @@ import { PageHero } from "@/components/layout/PageHero";
 import { Reveal } from "@/components/motion/Reveal";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { SocialLinks } from "@/components/layout/SocialLinks";
+import { LocationCard } from "@/components/contact/LocationCard";
 import { pageMetadata } from "@/lib/seo";
-import { fullAddress, site } from "@/lib/site";
+import { site } from "@/lib/site";
 
 export const metadata = pageMetadata({
   title: "Contact The Habitat, Khar West, Mumbai",
@@ -18,7 +19,7 @@ const cards = [
   { icon: MessageCircle, label: "WhatsApp", value: "Message us", href: site.social.whatsapp, external: true },
   { icon: Mail, label: "Email", value: site.email, href: `mailto:${site.email}` },
   { icon: Clock, label: "Hours", value: site.hours },
-  { icon: MapPin, label: "Address", value: fullAddress, href: site.mapsUrl, external: true },
+  { icon: MapPin, label: "Find us", value: "Khar West, Mumbai — see map below", href: "#location" },
 ];
 
 export default function ContactPage() {
@@ -74,14 +75,28 @@ export default function ContactPage() {
         </Reveal>
       </section>
 
-      <section className="relative h-[60vh] min-h-96 border-t border-line" aria-label="Map">
-        <iframe
-          title="Map showing The Habitat, Khar West, Mumbai"
-          src={site.mapsEmbed}
-          className="absolute inset-0 size-full grayscale invert-[0.92] hue-rotate-180"
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-        />
+      <section id="location" className="relative scroll-mt-24 border-t border-line" aria-label="Location">
+        {/* Phones: card above the map. Desktop: card floats over the map. */}
+        <div className="container-x relative z-10 py-10 lg:pointer-events-none lg:absolute lg:inset-y-0 lg:left-0 lg:flex lg:items-center lg:py-0">
+          <div className="lg:pointer-events-auto lg:w-[440px]">
+            <LocationCard />
+          </div>
+        </div>
+        <div className="relative h-[55vh] min-h-80 lg:h-[78vh] lg:min-h-[620px]">
+          <iframe
+            title="Map showing The Habitat, Khar West, Mumbai"
+            src={site.mapsEmbed}
+            className="absolute inset-0 size-full grayscale invert-[0.92] hue-rotate-180"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+          {/* darken the map edge behind the card on desktop */}
+          <div className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-bg via-bg/50 to-transparent lg:block lg:w-[48%]" aria-hidden />
+          {/* amber pulse around the venue marker (the embed centres on it) */}
+          <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" aria-hidden>
+            <span className="block size-20 animate-ping rounded-full border-2 border-amber/70 motion-reduce:animate-none" />
+          </div>
+        </div>
       </section>
     </>
   );
